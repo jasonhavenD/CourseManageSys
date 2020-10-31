@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+
+<body>
+    <div class="x-body">
+        <h1> 网上课堂注册系统 </h1>
+        <br> </br>
+        <form class="layui-form" id="registerForm">
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    <span class="x-red">*</span>登录名
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" required="" lay-verify="required" autocomplete="off"
+                        class="layui-input" />
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red">*</span>真实姓名,将会成为您唯一的登入名
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="role" class="layui-form-label"><span class="x-red">*</span>角色</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="role" lay-skin="primary" title="管理员" value="admin" />
+                    <input type="radio" name="role" lay-skin="primary" title="教师" value="teacher" />
+                    <input type="radio" name="role" lay-skin="primary" title="学生" value="student" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="phone" class="layui-form-label">
+                    <span class="x-red">*</span>手机
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="phone" name="phone" required="" lay-verify="required" autocomplete="off"
+                        class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="email" class="layui-form-label">
+                    <span class="x-red">*</span>邮箱
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="email" name="email" required="" lay-verify="required" autocomplete="off"
+                        class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="password" class="layui-form-label">
+                    <span class="x-red">*</span>密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password" id="password" name="password" required="" lay-verify="pass"
+                        autocomplete="off" class="layui-input" />
+                </div>
+                <!-- <div class="layui-form-mid layui-word-aux">
+                    6到16个字符
+                </div> -->
+            </div>
+            <div class="layui-form-item">
+                <label for="repass" class="layui-form-label">
+                    <span class="x-red">*</span>确认密码
+                </label>
+                <div class="layui-input-inline">
+                    <input type="password" id="repass" name="repass" required="" lay-verify="repass" autocomplete="off"
+                        class="layui-input" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul class=flashes style="color: red;margin-top: 10px;margin-left: 40px;">
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </form>
+
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label">
+            </label>
+            <button onclick="doSubmit()" class="layui-btn">
+                注册
+            </button>
+            <button onclick="window.location.href = '/';" class="layui-btn">
+                返回
+            </button>
+        </div>
+    </div>
+</body>
+{% endblock %}
+
+{% block  script_block %}
+<script>
+    function doSubmit() {
+        if ($("#name").val() == "") {
+            layer.msg('请输入用户名！', { icon: 2 });
+            return;
+        }
+
+        if ($("#password").val() == "") {
+            layer.msg('请输入密码！', { icon: 2 });
+            return;
+        }
+
+        if ($("#repass").val() == "") {
+            layer.msg('请输入确认密码！', { icon: 2 });
+            return;
+        }
+
+        if ($("#repass").val() != $("#password").val()) {
+            layer.msg('两次输入密码不一致！', { icon: 2 });
+            return;
+        }
+
+
+        $.ajax({
+            type: "post",
+            url: "/ui/university/register",
+            data: $("#registerForm").serialize(),
+            success: function (data) {
+                if (data.code != "0") {
+                    // layer.msg("注册失败！请重新注册！", { icon: 2 });
+                    window.location.reload();
+                }
+                else {
+                    layer.msg("注册成功！请登录！", { icon: 1 });
+                    window.location.href = "/";
+                }
+            }
+        })
+    }
+</script>
+{% endblock %}

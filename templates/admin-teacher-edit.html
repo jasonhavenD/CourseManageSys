@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+
+<body>
+    <div class="x-body">
+        <form class="layui-form" id="Info">
+            <div class="layui-form-item">
+                <label for="id" class="layui-form-label">
+                    <span class="x-red">*</span>ID
+                </label>
+
+                <div class="layui-input-inline">
+                    <input type="text" id="id" name="id" required="" autocomplete="off" class="layui-input" disabled
+                        value="{{user.id}}" style="background-color: lightgray">
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">
+                    <span class="x-red">*</span>姓名
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" required="" autocomplete="off" class="layui-input"
+                        value="{{user.name}}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="phone" class="layui-form-label">
+                    <span class="x-red">*</span>电话
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="phone" name="phone" required="" autocomplete="off" class="layui-input"
+                        value="{{user.phone}}">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                    <label for="password" class="layui-form-label">
+                        <span class="x-red"></span>密码
+                    </label>
+                    <div class="layui-input-inline">
+                        <input type="password" id="password" name="password" required="" autocomplete="off" class="layui-input" value="{{user.password}}">
+                    </div>
+            </div>
+            <div class="layui-form-item">
+                <label for="L_intro" class="layui-form-label">
+                    <span class="x-red"></span>简介
+                </label>
+                <div class="layui-input-inline">
+                    <textarea type="text" id="L_intro" name="intro" required="" autocomplete="off" class="layui-input"
+                        style="height: 150px; width:300px;">{{user.intro}}</textarea>
+                </div>
+            </div>
+            
+        </form>
+        <div class="layui-form-item">
+                <label for="edit" class="layui-form-label">
+                </label>
+                <button class="layui-btn" id='edit' name='edit' onclick="add_fn()">
+                    修改
+                </button>
+            </div>
+    </div>
+</body>
+{% endblock %}
+
+{% block  script_block %}
+
+<script>
+    function add_fn() {
+        $.ajax({
+            type: "post",
+            url: "/teacher/teacher/edit",
+            data: $("#Info").serialize(),
+            success: function (data) {
+                if (data.code != "0")
+                    layer.msg('修改失败', { icon: 2 });
+                else {
+                    layer.msg('修改成功', { icon: 1 });
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

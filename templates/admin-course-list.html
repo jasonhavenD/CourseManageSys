@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+
+
+<body>
+    <div class="x-nav">
+        <span class="layui-breadcrumb">
+            <a href="">课程管理</a>
+            <a>
+                <cite>课程列表</cite></a>
+        </span>
+        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+            href="javascript:location.replace(location.href);" title="刷新">
+            <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+        <div class="layui-row">
+            <form class="layui-form layui-col-md12 x-so">
+                <input type="text" name="coursename" id="coursename" placeholder="请输入课程名" autocomplete="off"
+                    class="layui-input">
+                <button type="button" onclick="search()" class="layui-btn" lay-filter="sreach"><i
+                        class="layui-icon">&#xe615;</i></button>
+            </form>
+        </div>
+        <xblock>
+            <!-- <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button> -->
+            <button class="layui-btn" onclick="x_admin_show('添加用户','/course/course/add')"><i
+                    class="layui-icon"></i>添加</button>
+            <!-- <span class="x-right" style="line-height:40px">共有数据：88 条</span> -->
+        </xblock>
+        <table class="layui-table" lay-filter="course_table" id="course_table">
+            <thead>
+                <tr>
+                    <th>
+                        <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i
+                                class="layui-icon">&#xe605;</i></div>
+                    </th>
+                    <th>课程编号</th>
+                    <th>课程名称</th>
+                    <th>授课老师</th>
+                    <th>课程介绍</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+        </table>
+
+    </div>
+</body>
+{% endblock %}
+
+{% block  script_block %}
+<script>
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#end' //指定元素
+        });
+    });
+
+    /*用户-停用*/
+    function member_stop(obj, id) {
+        layer.confirm('确认要停用吗？', function (index) {
+
+            if ($(obj).attr('title') == '启用') {
+
+                //发异步把用户状态进行更改
+                $(obj).attr('title', '停用')
+                $(obj).find('i').html('&#xe62f;');
+
+                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
+                layer.msg('已停用!', { icon: 5, time: 1000 });
+
+            } else {
+                $(obj).attr('title', '启用')
+                $(obj).find('i').html('&#xe601;');
+
+                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
+                layer.msg('已启用!', { icon: 5, time: 1000 });
+            }
+
+        });
+    }
+</script>
+<script>
+    function search() {
+        coursename = $("#coursename").val();
+        $.ajax({
+            type: "get",
+            url: "/course/course/findByNameLike?coursename=" + coursename,
+            success: function (data) {
+                if (data.code != "0") {
+                    html = '<tr><td colspan="6" align="center" >未找到相关结果</td></tr>'
+                    $("#tbody").html(html);
+                }
+                else {
+                    show_list(data.result);
+                }
+            }
+        });
+        return false;
+    }
+
+    $(function () {
+        $.ajax({
+            type: "get",
+            url: "/course/course/findByNameLike?coursename=",
+            success: function (data) {
+                if (data.code != "0") {
+                    alert('查询失败');
+                    html = '<tr><td colspan="6" align="center" >未找到相关结果</td></tr>'
+                    $("#tbody").html(html);
+                }
+                else {
+                    show_list(data.result);
+                }
+            }
+        });
+
+    });
+    function show_list(data) {
+        if (data == null || data == "" || data == "NaN" || data == "undefined") {
+            html = '<tr><td colspan="6" align="center" >未找到相关结果</td></tr>'
+            $("#tbody").html(html);
+            return;
+        }
+
+        if (data.length == 0) {
+            html = '<tr><td colspan="6" align="center" >未找到相关结果</td></tr>'
+            $("#tbody").html(html);
+            return;
+        }
+        var t_html = "";
+        for (let i = 0; i < data.length; i++) {
+            id = data[i]['id'];
+            coursename = data[i]['name'];
+            teacher = data[i]['teacher'];
+            content = data[i]['content'];
+
+            var html = "";
+
+            html += '<tr><td><div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id=' + (i + 1).toString() + '><i class="layui-icon">&#xe605;</i></div></td> ';
+            html += "<td>" + id + "</td> ";
+            html += "<td>" + coursename + "</td> ";
+            html += "<td>" + teacher + "</td> ";
+            html += "<td>" + content + "</td> ";
+            html += '<td class="td-manage">'
+            html += '<a title="编辑" onclick=edit(this,' + (i + 1).toString() + ')><i class="layui-icon">&#xe642;</i></a> '
+            html += '<a title="删除" onclick=member_del(this,' + (i + 1).toString() + ') ><i class="layui-icon">&#xe640;</i></a> ';
+            html += "</td></tr> ";
+            t_html += html;
+        }
+        $("#tbody").html(t_html);
+    }
+
+    function edit(obj, id) {
+        course_id = $(obj).parent().parent().children('td').eq(1).text();
+        x_admin_show("编辑", "/course/course/edit?course_id=" + course_id);
+    }
+
+    /*用户-删除*/
+    function member_del(obj, id) {
+        course_id = $(obj).parent().parent().children('td').eq(1).text();
+        layer.confirm('确认要删除吗？', function (index) {
+            $.ajax({
+                type: "get",
+                url: "/course/course/delete?course_id=" + course_id,
+                success: function (data) {
+                    if (data.code != "0")
+                        layer.msg('删除失败！', { icon: 2 });
+                    else {
+                        layer.msg('删除成功！', { icon: 1 });
+                        window.location.reload();
+                    }
+                }
+            });
+
+        });
+    }
+
+</script>
+{% endblock %}

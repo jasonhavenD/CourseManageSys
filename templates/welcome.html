@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+
+<body>
+    <div class="x-body layui-anim layui-anim-up">
+        <!-- <blockquote class="layui-elem-quote">欢迎：
+            <span class="x-red" id="cookiename"> </span>当前时间:2020-01
+            <br></br>
+        </blockquote> -->
+        <fieldset class="layui-elem-field">
+            <legend>数据统计</legend>
+            <div class="layui-field-box">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim=""
+                                lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 90px;">
+                                <div carousel-item="">
+                                    <ul class="layui-row layui-col-space10 layui-this">
+                                        <li class="layui-col-xs2">
+                                            <a href="javascript:;" class="x-admin-backlog-body">
+                                                <h3>功能模块</h3>
+                                                <p>
+                                                    <cite>4 </cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs2">
+                                            <a href="javascript:;" class="x-admin-backlog-body">
+                                                <h3>用户数量</h3>
+                                                <p>
+                                                    <cite>{{data['num_user']}}</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs2">
+                                            <a href="javascript:;" class="x-admin-backlog-body">
+                                                <h3>学生数量</h3>
+                                                <p>
+                                                    <cite>{{data['num_student']}}</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs2">
+                                            <a href="javascript:;" class="x-admin-backlog-body">
+                                                <h3>教师数量</h3>
+                                                <p>
+                                                    <cite>{{data['num_teacher']}}</cite></p>
+                                            </a>
+                                        </li>
+
+                                        <li class="layui-col-xs2">
+                                            <a href="javascript:;" class="x-admin-backlog-body">
+                                                <h3>开课数量</h3>
+                                                <p>
+                                                    <cite>{{data['num_course']}}</cite></p>
+                                            </a>
+                                        </li>
+
+                                        <li class="layui-col-xs2">
+                                            <a href="javascript:;" class="x-admin-backlog-body">
+                                                <h3>选课记录</h3>
+                                                <p>
+                                                    <cite>{{data['num_sc']}}</cite></p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset class="layui-elem-field">
+            <legend>系统通知</legend>
+            <div class="layui-field-box">
+                <table class="layui-table" lay-skin="line">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <a class="x-a">新版网上课堂系统上线了!</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a class="x-a">交流qq群:(88888888)</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="layui-elem-field">
+            <legend>系统信息</legend>
+            <div class="layui-field-box">
+                <table class="layui-table">
+                    <tbody>
+                        <tr>
+                            <th>网上课堂版本</th>
+                            <td>1.0.0</td>
+                        </tr>
+                        <tr>
+                            <th>MYSQL版本</th>
+                            <td>5.27.1</td>
+                        </tr>
+                        <tr>
+                            <th>剩余空间</th>
+                            <td>86015.2M</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <fieldset class="layui-elem-field">
+            <legend>开发团队</legend>
+            <div class="layui-field-box">
+                <table class="layui-table">
+                    <tbody>
+                        <tr>
+                            <th><b>版权所有</b></th>
+                            <td>《软件体系结构课堂》&nbsp;&nbsp;<b>滕嘉皓</b>&nbsp;&nbsp;小组</td>
+                        </tr>
+                        <tr>
+                            <th><b>开发者</b></th>
+                            <td>《软件体系结构课堂》&nbsp;&nbsp;<b>滕嘉皓</b>&nbsp;&nbsp;小组</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+
+    </div>
+</body>
+{% endblock %}
+{% block  script_block %}
+
+<script>
+    $(
+        function getCookie(name = "login_name") {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                let cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    let cookie = cookies[i].trim();
+                    // 判断这个cookie的参数名是不是我们想要的
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            $("#cookiename").text(cookieValue);
+        }
+    );
+</script>
+{% endblock %}

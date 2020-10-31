@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+
+<body class="childrenBody">
+    <div style="text-align: center; padding:11% 0;">
+        <i class="layui-icon" style="line-height:20rem; font-size:20rem; color: #393D50;">&#xe61c;</i>
+        <p style="font-size: 20px; font-weight: 300; color: #999;">我勒个去，你是不是走错地方了！</p>
+        
+        <button onclick="history.back(-1);" class="layui-btn" lay-filter="add" style="margin-top: 20px;">
+            返回
+        </button>
+    </div>
+</body>
+{% endblock %}
+{% block  script_block %}
+{% endblock %}

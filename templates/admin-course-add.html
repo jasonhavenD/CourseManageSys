@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+
+<body>
+    <div class="x-body">
+        <form class="layui-form" id="Info">
+            <div class="layui-form-item">
+                <label for="coursename" class="layui-form-label">
+                    <span class="x-red">*</span>课程名称
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="coursename" name="coursename" required="" autocomplete="off"
+                        class="layui-input">
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <label for="teacher" class="layui-form-label">
+                    <span class="x-red">*</span>授课老师
+                </label>
+                <div class="layui-input-inline">
+                    {% if user and user.role == 'teacher' %}
+                    <input type="text" id="teacher" name="teacher" required="" autocomplete="off" class="layui-input" disabled style="background-color: lightgray"
+                        value="{{user.name}}">
+                    {% else %}
+                    <input type="text" id="teacher" name="teacher" required="" autocomplete="off" class="layui-input"
+                        value="">
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label for="intro" class="layui-form-label">
+                    <span class="x-red"></span>课程介绍
+                </label>
+                <div class="layui-input-inline">
+                    <textarea style="width: 300px;height: 120px;" type="text" id="intro" name="intro" required=""
+                        autocomplete="off" class="layui-input"></textarea>
+                </div>
+            </div>
+        </form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes style="color: red;margin-top: 10px;margin-left: 50px;margin-bottom: 20px;">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        <div class="layui-form-item">
+            <label for="edit" class="layui-form-label">
+            </label>
+            <button class="layui-btn" id='edit' name='edit' onclick="add_fn()">
+                添加
+            </button>
+        </div>
+    </div>
+</body>
+{% endblock %}
+
+{% block  script_block %}
+<script>
+
+    function add_fn() {
+        $.ajax({
+            type: "post",
+            url: "/course/course/add",
+            data: $('#Info').serialize(),
+            success: function (data) {
+                if (data.code != "0"){
+                    layer.msg('添加失败', { icon: 2 });
+                    window.location.reload();
+                }
+                else {
+                    layer.msg('添加成功', { icon: 1 });
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}

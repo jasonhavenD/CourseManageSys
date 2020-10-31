@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+
+<body class="login-bg">
+
+    <div class="login layui-anim layui-anim-up">
+        <a href='/'>
+            <div class="message">网上课堂微服务系统</div>
+        </a>
+        <div id="darkbannerwrap"></div>
+
+        <form class="layui-form" id="loginForm">
+            <input id="name" name="loginName" placeholder="用户名" type="text" required="" lay-verify="required"
+                class="layui-input">
+            <hr class="hr15" />
+            <input id="pwd" name="password" lay-verify="required" placeholder="密码" type="password" required=""
+                class="layui-input" />
+            <hr class="hr15" />
+            <input value="登录" type="button" lay-filter="login" style="width:100%;" onclick="doSubmit()" />
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul class=flashes style="color: red;margin-top: 10px;">
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+            <hr class="hr30" />
+        </form>
+        <a href="/ui/university/register">没有账号？去注册</a>
+    </div>
+</body>1
+{% endblock %}
+
+{% block  script_block %}
+<script>
+    $(function () {
+        $('#pwd').bind('keyup', function (event) {
+            if (event.keyCode == "13") {
+                doSubmit();
+            }
+        });
+    });
+
+
+    function doSubmit() {
+        if ($("#name").val() == "") {
+            layer.msg('请输入用户名！', { icon: 2 });
+            return;
+        }
+
+        if ($("#pwd").val() == "") {
+            layer.msg('请输入密码！', { icon: 2 });
+            return;
+        }
+
+        $.ajax({
+            type: "post",
+            url: "/ui/university/login",
+            data: $("#loginForm").serialize(),
+            success: function (data) {
+                if (data.code != "0") {
+                    // layer.msg('登录失败！请重新输入！', { icon: 2 });
+                    window.location.reload()
+                } else {
+                    layer.msg('登录成功！', { icon: 1 });
+                    // document.cookie = "login_name=" + data.output.login_name;
+                    // document.cookie = "login_id=" + data.output.id;
+                    // document.cookie = "login_role=" + data.output.role;
+                    if (data.role == "teacher") {
+                        window.location.href = "/ui/university/teacher";
+                    }
+                    else if (data.role == "student") {
+                        window.location.href = "/ui/university/user";
+                    }
+                    else
+                        window.location.href = "/ui/university/admin";
+                }
+
+            }
+        })
+    }
+
+</script>
+{% endblock %}
